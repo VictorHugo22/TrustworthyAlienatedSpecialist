@@ -1,0 +1,179 @@
+/* Estilo general para la página */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #2B2EFD, #E63EAD);
+    height: 100vh;
+    display: grid;
+    place-items: center; /* Centra el contenedor horizontal y verticalmente */
+    color: #FFFFFF;
+}
+
+/* Contenedor principal del formulario */
+.container {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 30px 40px;
+    width: 100%;
+    max-width: 400px; /* Limita el ancho del formulario */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* Título del formulario */
+h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #FFFFFF;
+}
+
+/* Estilo de los campos de entrada */
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 15px 0;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.85);
+    color: #333;
+    font-size: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Placeholder */
+input::placeholder {
+    color: #555;
+}
+
+/* Botón de inicio de sesión */
+button {
+    width: 100%;
+    padding: 12px;
+    background: #4CAF50;
+    border: none;
+    border-radius: 30px;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: #3e8e41;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Links en la parte inferior */
+.links {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    color: #FFFFFF;
+}
+
+.links a {
+    color: #FFFFFF;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.links a:hover {
+    color: #ccc;
+}
+
+/* Estilo para el contenedor de los enlaces */
+form p {
+    display: flex;
+    justify-content: space-between; /* Distribuye los enlaces hacia los lados */
+    margin-top: 10px;
+    font-size: 0.7rem; /* Tamaño del texto */
+    color: #FFFFFF; /* Color del texto */
+}
+
+/* Estilo general de los enlaces */
+form p a {
+    text-decoration: none; /* Elimina el subrayado */
+    color: #FFFFFF; /* Color blanco para el enlace */
+    font-weight: bold; /* Hace que el texto sea más legible */
+    transition: color 0.3s ease; /* Suaviza los cambios de color */
+}
+
+/* Efecto hover para los enlaces */
+form p a:hover {
+    color: #FFD700; /* Cambia a un color dorado al pasar el mouse */
+    text-decoration: underline; /* Añade un subrayado al pasar el mouse */
+}
+
+/* Estilo para el espaciado entre los enlaces (opcional si están juntos) */
+form p a:first-child {
+    margin-right: 10px;
+}
+
+
+
+
+
+/* Estilo general para los campos de entrada */
+form input[type="text"],
+form input[type="email"],
+form input[type="password"] {
+    width: 100%; /* Ocupa todo el ancho disponible */
+    padding: 10px; /* Espaciado interno */
+    margin: 10px 0; /* Separación entre campos */
+    font-size: 1rem; /* Tamaño del texto */
+    color: #FFFFFF; /* Color del texto */
+    background-color: rgba(255, 255, 255, 0.2); /* Fondo blanco semiopaco */
+    border: 1px solid rgba(255, 255, 255, 0.4); /* Bordes semiopacos */
+    border-radius: 5px; /* Bordes redondeados */
+    backdrop-filter: blur(5px); /* Efecto de desenfoque detrás del fondo */
+    transition: all 0.3s ease; /* Suaviza las transiciones */
+}
+
+/* Cambios al interactuar con el campo */
+form input[type="text"]:focus,
+form input[type="email"]:focus, 
+form input[type="password"]:focus {
+    outline: none; /* Elimina el contorno azul predeterminado */
+    background-color: rgba(255, 255, 255, 0.3); /* Fondo ligeramente más opaco */
+    border: 1px solid #FFD700; /* Bordes dorados al hacer foco */
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.6); /* Brillo dorado alrededor */
+}
+
+/* Placeholder estilizado */
+form input::placeholder {
+    color: rgba(255, 255, 255, 0.6); /* Color del texto del placeholder */
+    font-style: italic; /* Fuente en cursiva */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Estilo para las características de la contraseña */
+.password-requirements {
+    font-size: 0.7rem; /* Tamaño de fuente más pequeño */
+    color: #FFFFF; /* Color gris para el texto */
+    margin-top: 10px;
+}
+
+/* Estilo para los elementos de la lista */
+.password-requirements ul {
+    padding-left: 20px; /* Espaciado a la izquierda */
+}
+
+.password-requirements li {
+    margin-bottom: 3px; /* Espacio entre cada elemento de la lista */
+}
+

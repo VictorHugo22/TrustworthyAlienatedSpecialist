@@ -1,0 +1,22 @@
+{
+  "name": "proyecto-login",
+  "version": "1.0.0",
+  "description": "Sistema de login, registro y restablecimiento de contraseñas",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.1",
+    "crypto": "^1.0.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.8.2",
+    "nodemailer": "^6.9.16"
+  },
+  "engines": {
+    "node": "16.x"
+  },
+  "author": "",
+  "license": "ISC"
+}
