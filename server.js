@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true })); // Para procesar datos del form
 
 const mongoose = require("mongoose");
 
-const mySecret = process.env["MONGODB_URI"];
+const mySecret = process.env['MONGODB_URI'];;
 
 mongoose
   .connect(mySecret)
@@ -81,8 +81,8 @@ app.post("/register", async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "gmail", 
       auth: {
-        user: "cryto3257@gmail.com", 
-        pass: "kaya dchr zryi euer", 
+        user: process.env['GMAIL_USER'], 
+        pass: process.env['GMAIL_PASS'], 
       },
     });
 
@@ -133,8 +133,8 @@ app.post("/reset-password", async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "cryto3257@gmail.com", 
-        pass: "kaya dchr zryi euer", 
+        user: process.env['GMAIL_USER'], 
+        pass: process.env['GMAIL_PASS'], 
       },
     });
 
@@ -198,8 +198,8 @@ app.post("/change-password", async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "cryto3257@gmail.com",
-        pass: "kaya dchr zryi euer",
+        user: process.env['GMAIL_USER'],
+        pass: process.env['GMAIL_PASS'],
       },
     });
 
