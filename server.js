@@ -121,7 +121,7 @@ app.post("/reset-password", async (req, res) => {
 
     // Crear un token de restablecimiento 
     const resetToken = crypto.randomBytes(20).toString("hex"); // Genera un token aleatorio
-    const resetLink = `https://b3a615e7-81b5-45e4-84b1-cdbcf019fe1d-00-2tf8vxf28gzg9.worf.replit.dev/change-password.html?token=${resetToken}`; // URL con el token
+    const resetLink = `https://login-cfd7.onrender.com/change-password.html?token=${resetToken}`; // URL con el token
 
     //Se guardaría el token en la base de datos 
 
