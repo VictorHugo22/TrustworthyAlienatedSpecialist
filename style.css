@@ -14,11 +14,29 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #2B2EFD, #E63EAD);
+    background: #536573;
+    /*background: linear-gradient(135deg, #2B2EFD, #E63EAD);*/
     height: 100vh;
     display: grid;
     place-items: center; /* Centra el contenedor horizontal y verticalmente */
     color: #FFFFFF;
+}
+
+.logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 370px; 
+    height: auto;
+    left: 10px;
+}
+
+
+.login-image {
+    width: 150px;            /* Ajustar tamaño*/
+    height: auto;
+    display: block;          /* Centrada */
+    margin: 20px auto;       /* Espaciado y centrado */
 }
 
 
