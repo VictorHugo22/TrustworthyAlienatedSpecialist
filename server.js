@@ -4,7 +4,6 @@ const User = require("./models/User");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt"); // Para cifrar la nueva contraseña
-const crypto = require("crpto");
 
 const app = express();
 
@@ -251,24 +250,31 @@ app.post("/change-password", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { username, password } = req.body; // Recibimos el correo y la contraseña desde el formulario.
 
-  console.log('Username recibido:', username);
-
   try {
     // Buscar al usuario en la base de datos por correo
     const user = await User.findOne({ username });
-
-    console.log('Usuario encontrado:', user);
 
     // Verificar si el usuario existe
     if (!user) {
       return res.status(400).json({ error: "Usuario no encontrado." });
     }
 
-    // Comparar la contraseña ingresada con el hash almacenado
-    const isMatch = await bcrypt.compare(password, user.password);
+    const storedHash = user.password; // Hash almacenado en la base de datos
+    const isBcrypt = storedHash.startsWith("$2b$"); // Verificar si es bcrypt
 
-    if (!isMatch) {
-      return res.status(400).json({ error: "Contraseña incorrecta." });
+    let isPasswordValid;
+
+    if (isBcrypt) {
+      // Comparar usando bcrypt
+      isPasswordValid = await bcrypt.compare(password, storedHash);
+    } else {
+      // Comparar usando SHA-3
+      const hashedInput = crypto.createHash("sha3-256").update(password).digest("hex");
+      isPasswordValid = hashedInput === storedHash;
+    }
+
+    if (!isPasswordValid) {
+      return res.status(401).send("Usuario o contraseña incorrectos.");
     }
 
     // Si las credenciales son válidas, redirigimos al usuario a la página de bienvenida
