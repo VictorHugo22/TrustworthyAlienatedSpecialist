@@ -3,7 +3,8 @@ const bodyParser = require("body-parser");
 const User = require("./models/User"); 
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-const bcrypt = require("bcrypt"); // Para encriptar la nueva contraseña
+const bcrypt = require("bcrypt"); // Para cifrar la nueva contraseña
+const crypto = require("crpto");
 
 const app = express();
 
@@ -64,49 +65,64 @@ app.post("/register", async (req, res) => {
       return res.status(400).send("Este nombre de usuario ya está registrado.");
     }
 
-    // Encriptar la contraseña
+    // Cifrar la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Crear un nuevo usuario con la contraseña encriptada
-    const newUser = new User({
+    // Generar un token único para el enlace de confirmación
+    const confirmationToken = crypto.randomBytes(32).toString("hex");
+
+    // Guardar el token temporalmente en la base de datos junto con el usuario
+    const tempUser = new User({
       username,
       email,
-      password: hashedPassword, // Guarda el hash en lugar de la contraseña en texto plano
+      password: hashedPassword,
+      confirmationToken,
+      isConfirmed: false, //Campo para verificar si el usuario confirmó su correo
     });
 
-    // Guardar el usuario en la base de datos
-    await newUser.save();
+    await tempUser.save();
 
-    // Configuración de Nodemailer
-    const transporter = nodemailer.createTransport({
-      service: "gmail", 
-      auth: {
-        user: process.env['GMAIL_USER'], 
-        pass: process.env['GMAIL_PASS'], 
-      },
-    });
+    // Enviar el enlace de confirmación al correo electrónico
+    const confirmationLink = `https://login-cfd7.onrender.com/confirm-registration?token=${confirmationToken}`;
 
-    // Configuración del correo
     const mailOptions = {
-      from: "cryto3257@gmail.com", 
-      to: email, // Correo del usuario registrado
-      subject: "¡Bienvenido a nuestra plataforma!",
-      text: `Hola ${username}, tu registro fue exitoso. ¡Gracias por unirte!`,
+      from: process.env['GMAIL_USER'],
+      to: email,
+      subject: "Confirma tu registro",
+      html: `<p>Haz clic en el siguiente enlace para confirmar tu registro:</p><a href="${confirmationLink}">Confirmar registro</a>`,
     };
 
-    // Enviar el correo
     await transporter.sendMail(mailOptions);
-    console.log("Correo enviado correctamente a:", email);
 
-    // Redirigir al usuario a la página de inicio de sesión
-    res.redirect("/");
-  } catch (err) {
-    console.error("Error al registrar usuario:", err);
-    res
-      .status(500)
-      .send("No se pudo completar el registro. Inténtalo de nuevo.");
+    res.status(200).send("Registro iniciado. Por favor, revisa tu correo para confirmar tu registro.");
+  } catch (error) {
+    console.error("Error en el registro:", error);
+    res.status(500).send("Ocurrió un error en el registro.");
+  }
+
+});
+
+app.get("/confirm-registration", async (req, res) => {
+  try {
+    const { token } = req.query;
+    const user = await User.findOne({ confirmationToken: token, isConfirmed: false });
+
+    if (!user) {
+      return res.status(400).send("El enlace de confirmación es inválido o ya fue usado.");
+    }
+
+    // Confirmar el registro
+    user.isConfirmed = true;
+    user.confirmationToken = undefined; // Eliminar el token
+    await user.save();
+
+    res.status(200).send("Registro exitoso. Ahora puedes iniciar sesión.");
+  } catch (error) {
+    console.error("Error al confirmar el registro:", error);
+    res.status(500).send("Ocurrió un error al confirmar tu registro.");
   }
 });
+
 
 app.post("/reset-password", async (req, res) => {
   const { username } = req.body;
@@ -185,7 +201,8 @@ app.post("/change-password", async (req, res) => {
     console.log("Fecha actual:", Date.now()); // Log para comparar con la expiración****
 
     // Encriptar la nueva contraseña
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    // const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const hashedPassword = crypto.createHash("sha3-256").update(newPassword).digest("hex");
 
     // Actualizar la contraseña del usuario
     user.password = hashedPassword;

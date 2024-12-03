@@ -5,6 +5,8 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
+  confirmationToken: { type: String }, // Campo para el token de confirmación
+  isConfirmed: { type: Boolean, default: false },
   resetToken: { type: String },
   resetTokenExpires: { type: Date }
 });
