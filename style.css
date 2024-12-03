@@ -9,6 +9,19 @@ body {
     color: #FFFFFF;
 }
 
+/* style.css */
+.index-page {
+    background-image: url('images/fondo.jpg');  /* Ajusta la ruta a tu imagen */
+    background-size: cover;                     /* Cubre toda la pantalla */
+    background-position: center;                /* Centra la imagen */
+    background-repeat: no-repeat;               /* Evita la repetición */
+    background-attachment: fixed;               /* Fija la imagen al hacer scroll */
+    height: 100vh;                              /* Asegura que cubra toda la altura */
+    margin: 0;                                  /* Elimina márgenes del body */
+    padding: 0;                                 /* Elimina relleno */
+}
+
+
 /* Contenedor principal del formulario */
 .container {
     background: rgba(255, 255, 255, 0.15);
@@ -164,7 +177,7 @@ form input::placeholder {
 /* Estilo para las características de la contraseña */
 .password-requirements {
     font-size: 0.7rem; /* Tamaño de fuente más pequeño */
-    color: #FFFFF; /* Color gris para el texto */
+    color: #FFFFFF; /* Color gris para el texto */
     margin-top: 10px;
 }
 
