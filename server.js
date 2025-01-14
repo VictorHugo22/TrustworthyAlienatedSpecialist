@@ -212,14 +212,14 @@ app.post("/change-password", async (req, res) => {
     user.resetToken = undefined;
     await user.save();
 
-    // Configuración del correo
+    /* Configuración del correo
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env['GMAIL_USER'],
         pass: process.env['GMAIL_PASS'],
       },
-    });
+    });*/
 
     // Configurar el correo
     const mailOptions = {
@@ -290,7 +290,7 @@ app.post("/login", async (req, res) => {
 });
 
 // Iniciar el servidor
-const PORT = 3000;
+//const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
