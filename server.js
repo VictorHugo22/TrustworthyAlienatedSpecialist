@@ -1,11 +1,12 @@
 const express = require("express");
+const axios = require('axios');
 const bodyParser = require("body-parser");
 const User = require("./models/User"); 
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt"); // Para cifrar la nueva contraseña
-
 const app = express();
+const PORT = 8080;
 
 // Middleware para servir archivos estáticos desde la raíz
 app.use(express.static(__dirname)); // Para servir archivos estáticos
