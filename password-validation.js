@@ -5,7 +5,9 @@ const lowercaseRegex = /[a-z]/;
 const numberRegex = /\d/; 
 const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/; 
 
+// Las funciones locales de validación se han comentado porque se reemplazarán por un microservicio
 
+/*
 function checkPasswordLength(password, submitButton) {
     
     if (password.length >= 8) {
@@ -39,7 +41,27 @@ function checkPasswordStrength(password, strengthMessage) {
     }
 }
 
+*/
+
 // Función para manejar la validación de la contraseña y la habilitación del botón
+
+const axios = require('axios');
+
+async function validatePasswordWithService(password) {
+    try {
+        const response = await axios.post(
+            'https://password-validation-service.onrender.com',
+            { password },
+            { timeout: 5000 } // Timeout de 5 segundos
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error connecting to validation service:', error.message);
+        return { isValid: false, errors: ['Unable to validate password at this time. Please try again later.'] };
+    }
+}
+
+/*
 function validatePasswordInput(passwordInput, submitButton, strengthMessage) {
     passwordInput.addEventListener('input', function() {
         const password = passwordInput.value;
@@ -51,3 +73,8 @@ function validatePasswordInput(passwordInput, submitButton, strengthMessage) {
         checkPasswordStrength(password, strengthMessage);
     });
 }
+*/
+
+module.exports = {
+    validatePasswordWithService,
+};

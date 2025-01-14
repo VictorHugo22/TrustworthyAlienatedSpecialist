@@ -8,6 +8,15 @@ const bcrypt = require("bcrypt"); // Para cifrar la nueva contraseña
 const app = express();
 const PORT = 8080;
 
+// Configuración del correo
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env['GMAIL_USER'], 
+    pass: process.env['GMAIL_PASS'], 
+  },
+});
+
 // Middleware para servir archivos estáticos desde la raíz
 app.use(express.static(__dirname)); // Para servir archivos estáticos
 app.use(express.json()); // Para procesar JSON en el cuerpo de la solicitud
@@ -145,14 +154,6 @@ app.post("/reset-password", async (req, res) => {
     user.resetTokenExpires = Date.now() + 3600000; // 1 hora de validez
     await user.save();
 
-    // Configuración del correo
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env['GMAIL_USER'], 
-        pass: process.env['GMAIL_PASS'], 
-      },
-    });
 
     // Configurar el correo
     const mailOptions = {
