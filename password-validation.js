@@ -1,4 +1,52 @@
+const microserviceURL = 'https://password-validator.onrender.com/validate-password';
 
+const passwordInput = document.getElementById('password');
+const submitButton = document.getElementById('registerForm').querySelector('button[type="submit"]');
+const strengthMessage = document.getElementById('password-strength-message');
+
+// Función para validar la contraseña usando el microservicio
+async function validatePassword(password) {
+    try {
+        const response = await fetch(microserviceURL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al conectar con el microservicio');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error al validar la contraseña:', error);
+        return { isValid: false, errors: ['No se pudo validar la contraseña.'] };
+    }
+}
+
+// Escuchar cambios en el campo de contraseña
+passwordInput.addEventListener('input', async () => {
+    const password = passwordInput.value;
+
+    // Validar la contraseña usando el microservicio
+    const result = await validatePassword(password);
+
+    // Actualizar el mensaje de fortaleza
+    if (result.isValid) {
+        strengthMessage.textContent = 'Contraseña válida';
+        strengthMessage.style.color = 'green';
+        submitButton.disabled = false;
+    } else {
+        strengthMessage.textContent = result.errors.join('. ');
+        strengthMessage.style.color = 'red';
+        submitButton.disabled = true;
+    }
+});
+
+
+
+/*
 const minLengthRegex = /.{8,}/; // Al menos 8 caracteres
 const uppercaseRegex = /[A-Z]/; 
 const lowercaseRegex = /[a-z]/; 
@@ -7,7 +55,7 @@ const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
 
 // Las funciones locales de validación se han comentado porque se reemplazarán por un microservicio
 
-/*
+
 function checkPasswordLength(password, submitButton) {
     
     if (password.length >= 8) {
@@ -45,21 +93,6 @@ function checkPasswordStrength(password, strengthMessage) {
 
 // Función para manejar la validación de la contraseña y la habilitación del botón
 
-const axios = require('axios');
-
-async function validatePasswordWithService(password) {
-    try {
-        const response = await axios.post(
-            'https://password-validation-service.onrender.com',
-            { password },
-            { timeout: 5000 } // Timeout de 5 segundos
-        );
-        return response.data;
-    } catch (error) {
-        console.error('Error connecting to validation service:', error.message);
-        return { isValid: false, errors: ['Unable to validate password at this time. Please try again later.'] };
-    }
-}
 
 /*
 function validatePasswordInput(passwordInput, submitButton, strengthMessage) {
@@ -74,7 +107,3 @@ function validatePasswordInput(passwordInput, submitButton, strengthMessage) {
     });
 }
 */
-
-module.exports = {
-    validatePasswordWithService,
-};
