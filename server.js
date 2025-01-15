@@ -4,6 +4,7 @@ const User = require("./models/User");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt"); // Para encriptar la nueva contraseña
+const axios = require("axios");
 
 const app = express();
 
@@ -53,6 +54,14 @@ app.post("/register", async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
+    // Validar la contraseña con el microservicio antes de procesar el registro
+    const response = await axios.post('https://password-validation-service.onrender.com/validate-password', { password });
+
+    // Si la contraseña no es válida, devolver el mensaje del microservicio
+    if (!response.data.valid) {
+      return res.status(400).send(response.data.message);
+    }
+    
     // Validar si ya existe un usuario con el mismo correo
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -64,10 +73,10 @@ app.post("/register", async (req, res) => {
       return res.status(400).send("Este nombre de usuario ya está registrado.");
     }
 
-    // Encriptar la contraseña
+    // Cifrar la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Crear un nuevo usuario con la contraseña encriptada
+    // Crear un nuevo usuario con la contraseña cifrada
     const newUser = new User({
       username,
       email,
@@ -100,6 +109,7 @@ app.post("/register", async (req, res) => {
 
     // Redirigir al usuario a la página de inicio de sesión
     res.redirect("/");
+
   } catch (err) {
     console.error("Error al registrar usuario:", err);
     res
