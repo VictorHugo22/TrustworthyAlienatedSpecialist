@@ -1,6 +1,7 @@
 const microserviceURL = 'https://password-validator.onrender.com/validate-password';
 
 const passwordInput = document.getElementById('password');
+const form = document.getElementById('registerForm');
 const submitButton = document.getElementById('registerForm').querySelector('button[type="submit"]');
 const strengthMessage = document.getElementById('password-strength-message');
 
@@ -44,6 +45,22 @@ passwordInput.addEventListener('input', async () => {
     }
 });
 
+
+form.addEventListener('submit', async (event) => {
+    event.preventDefault(); // evitar envío hasta validar
+
+    const password = passwordInput.value;
+    const result = await validatePassword(password);
+
+    if (!result.isValid) {
+        alert("La contraseña no es válida:\n\n" + result.errors.join('\n'));
+        submitButton.disabled = false; // permitir corrección
+        return; // no envía el formulario
+    }
+
+    // Si es válida, enviar el formulario
+    form.submit();
+});
 
 
 /*
