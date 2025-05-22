@@ -72,9 +72,13 @@
     element.classList.toggle('valid', condition);
   }
 
-  form.addEventListener('submit', function (e) {
-    const password = passwordInput.value;
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
 
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    const password = passwordInput.value;
     const isValid =
       password.length >= 8 &&
       /[A-Z]/.test(password) &&
@@ -83,9 +87,6 @@
       /[!@#\$%\^\&*\)\(+=._-]/.test(password);
 
     if (!isValid) {
-      e.preventDefault();
-
-      // SweetAlert2 modal
       Swal.fire({
         icon: 'error',
         title: 'Contraseña inválida',
@@ -101,9 +102,57 @@
         `,
         confirmButtonText: 'Entendido',
       });
+      return;
+    }
+
+    try {
+      const response = await fetch('/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      const text = await response.text();
+
+      if (response.status === 400) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Registro fallido',
+          text: text,
+          confirmButtonText: 'Entendido',
+        });
+      } else if (response.redirected) {
+        Swal.fire({
+          icon: 'success',
+          title: '¡Registro exitoso!',
+          text: 'Tu cuenta ha sido creada correctamente.',
+          confirmButtonText: 'Continuar',
+        }).then(() => {
+          window.location.href = response.url;
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ocurrió un error inesperado.',
+          confirmButtonText: 'Entendido',
+        });
+      }
+
+    } catch (error) {
+      console.error('Error al registrar usuario:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de red',
+        text: 'No se pudo conectar con el servidor.',
+        confirmButtonText: 'Entendido',
+      });
     }
   });
 </script>
+
 
 
 
