@@ -6,7 +6,10 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
   resetToken: { type: String },
-  resetTokenExpires: { type: Date }
+  resetTokenExpires: { type: Date },
+  verified: { type: Boolean, default: false },
+  verificationToken: { type: String },
+  verificationTokenExpires: { type: Date },
 });
 
 // Exporta el modelo User

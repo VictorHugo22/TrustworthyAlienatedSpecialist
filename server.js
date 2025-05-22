@@ -76,11 +76,18 @@ app.post("/register", async (req, res) => {
     // Cifrar la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Crear un nuevo usuario con la contraseña cifrada
+    // Generar un token de verificación
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const verificationTokenExpires = Date.now() + 3600000;
+
+    // Crear un nuevo usuario 
     const newUser = new User({
       username,
       email,
       password: hashedPassword, // Guarda el hash en lugar de la contraseña en texto plano
+      verified: false,
+      verificationToken,
+      verificationTokenExpires,
     });
 
     // Guardar el usuario en la base de datos
@@ -95,26 +102,65 @@ app.post("/register", async (req, res) => {
       },
     });
 
-    // Configuración del correo
+    const verificationLink = `https://login-cfd7.onrender.com/verify-email?token=${verificationToken}`;
+
     const mailOptions = {
-      from: "cryto3257@gmail.com", 
-      to: email, // Correo del usuario registrado
-      subject: "¡Bienvenido a nuestra plataforma!",
-      text: `Hola ${username}, tu registro fue exitoso. ¡Gracias por unirte!`,
+      from: process.env.GMAIL_USER,
+      to: email,
+      subject: "Verifica tu cuenta",
+      text: `Hola ${username},\n\nPor favor verifica tu cuenta haciendo clic en el siguiente enlace:\n\n${verificationLink}\n\nEste enlace expirará en 1 hora.`,
     };
+
+    
 
     // Enviar el correo
     await transporter.sendMail(mailOptions);
-    console.log("Correo enviado correctamente a:", email);
-
-    // Redirigir al usuario a la página de inicio de sesión
-    res.redirect("/");
-
+    res.send("Registro exitoso. Para finalizar tu registro, te enviamos un enlace a tu correo electrónico.");
   } catch (err) {
     console.error("Error al registrar usuario:", err);
     res
       .status(500)
       .send("No se pudo completar el registro. Inténtalo de nuevo.");
+  }
+});
+
+
+app.get("/verify-email", async (req, res) => {
+  const { token } = req.query;
+  try {
+    const user = await User.findOne({
+      verificationToken: token,
+      verificationTokenExpires: { $gt: Date.now() },
+    });
+    if (!user) return res.status(400).send("Enlace inválido o expirado.");
+
+    user.verified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpires = undefined;
+    await user.save();
+
+    res.send("¡Cuenta verificada exitosamente! Ahora puedes iniciar sesión.");
+  } catch (err) {
+    console.error("Error al verificar correo:", err);
+    res.status(500).send("Error interno al verificar tu cuenta.");
+  }
+});
+
+
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const user = await User.findOne({ username });
+    if (!user) return res.status(400).json({ error: "Usuario no encontrado." });
+    if (!user.verified) return res.status(400).json({ error: "Verifica tu cuenta antes de iniciar sesión." });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ error: "Contraseña incorrecta." });
+
+    res.redirect(`/welcome.html?username=${encodeURIComponent(user.username)}`);
+  } catch (err) {
+    console.error("Error en login:", err);
+    res.status(500).json({ error: "Error interno al iniciar sesión." });
   }
 });
 
@@ -240,39 +286,6 @@ app.post("/change-password", async (req, res) => {
 });
 
 
-
-app.post("/login", async (req, res) => {
-  const { username, password } = req.body; // Recibimos el correo y la contraseña desde el formulario.
-
-  console.log('Username recibido:', username);
-
-  try {
-    // Buscar al usuario en la base de datos por correo
-    const user = await User.findOne({ username });
-
-    console.log('Usuario encontrado:', user);
-
-    // Verificar si el usuario existe
-    if (!user) {
-      return res.status(400).json({ error: "Usuario no encontrado." });
-    }
-
-    // Comparar la contraseña ingresada con el hash almacenado
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-      return res.status(400).json({ error: "Contraseña incorrecta." });
-    }
-
-    // Si las credenciales son válidas, redirigimos al usuario a la página de bienvenida
-    res.redirect(`/welcome.html?username=${encodeURIComponent(user.username)}`);
-  } catch (err) {
-    console.error("Error al iniciar sesión:", err);
-    res
-      .status(500)
-      .json({ error: "Ocurrió un error al procesar tu solicitud." });
-  }
-});
 
 // Iniciar el servidor
 const PORT = 3000;
