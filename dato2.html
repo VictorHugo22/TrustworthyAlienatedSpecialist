@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Curiosidades de la Criptografía</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Curiosidades de la Criptografía</h1>
+  </header>
+
+  <div class="container">
+    <div class="section">
+      <h2>Cifrado Vernam y la Libreta de Un Solo Uso:</h2>
+      <ul>
+        <li><strong>Cifrado Vernam y la Libreta de Un Solo Uso:</strong> El cifrado Vernam fue inventado en 1917 por Gilbert S. Vernam, un ingeniero de AT&T Bell Labs, como parte de un sistema de cifrado para proteger comunicaciones telegráficas. Su idea original consistía en realizar una operación XOR (una operación lógica exclusiva) entre cada carácter del mensaje y una clave generada mecánicamente. En su forma básica, Vernam proponía reutilizar una clave, lo cual podía dejar patrones detectables. Sin embargo, esta limitación fue superada con una contribución crucial de Joseph Mauborgne, quien propuso usar una clave completamente aleatoria y de la misma longitud que el mensaje, que se usara una sola vez y luego se destruyera. Así nació la llamada libreta de un solo uso, o one-time pad..<br><br>
+
+
+        El principio de este método es sorprendentemente simple pero poderoso. Si la clave es verdaderamente aleatoria, tan larga como el mensaje, nunca reutilizada y mantenida en secreto, entonces el cifrado es teóricamente irrompible. Incluso si un atacante intercepta el mensaje cifrado, no podrá deducir nada útil sobre el contenido original sin la clave. Esto fue demostrado formalmente por Claude Shannon, considerado el padre de la teoría de la información, en la década de 1940. Shannon probó que este sistema alcanza lo que se llama "seguridad perfecta", es decir, que la probabilidad de adivinar correctamente el mensaje original sin la clave es igual a la de adivinarlo al azar.<br><br>
+        
+        Este método fue utilizado durante la Guerra Fría por servicios de inteligencia, como la CIA y la KGB, para garantizar comunicaciones indescifrables. Se usaban libretas físicas que contenían las claves precompartidas entre los interlocutores, y una vez usado un segmento de clave, se destruía. Sin embargo, a pesar de su fortaleza teórica, la libreta de un solo uso es poco práctica en muchos contextos modernos, principalmente porque requiere que tanto el emisor como el receptor compartan una gran cantidad de clave secreta con anticipación, lo cual es difícil de escalar.<br><br>
+
+        
+        Hoy en día, la idea sigue siendo un símbolo de la criptografía perfecta. Si bien rara vez se aplica en sistemas generalizados, la libreta de un solo uso todavía se utiliza en entornos de alta seguridad donde la privacidad absoluta es esencial, como en operaciones militares o de espionaje. Además, su simplicidad conceptual ha servido como base educativa y teórica para muchos desarrollos en criptografía moderna.<br><br>
+        
+        </li>
+        
+      </ul>
+    </div>
+    <button type="submit" id="submitButton">Descargar PDF</button>       
+  </div>
+
+</body>
+</html>
