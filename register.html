@@ -123,14 +123,14 @@
           text: text,
           confirmButtonText: 'Entendido',
         });
-      } else if (response.redirected) {
+      } else if (response.ok) {
         Swal.fire({
           icon: 'success',
           title: '¡Registro exitoso!',
           text: 'Tu cuenta ha sido creada correctamente.',
           confirmButtonText: 'Continuar',
         }).then(() => {
-          window.location.href = response.url;
+          window.location.href = '/';
         });
       } else {
         Swal.fire({
