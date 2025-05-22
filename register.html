@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<style>
+  #password-requirements {
+    list-style: none;
+    padding: 0;
+  }
+  #password-requirements li {
+    color: red;
+  }
+  #password-requirements li.valid {
+    color: rgb(64, 255, 64);
+  }
+</style>
 </head>
 <body>
     <img src="images/logoC.png" alt="Logo de la página" class="logo">
@@ -20,27 +34,16 @@
         <input type="password" id="password" name="password" required><br><br>
         
         <div class="password-requirements">
-            <ul>
-                <li>Al menos 8 caracteres</li>
-                <li>Al menos una letra mayúscula</li>
-                <li>Al menos una letra minúscula</li>
-                <li>Al menos un número</li>
-                <li>Al menos un símbolo (ejemplo: !, @, #, $, %, etc.)</li>
+            <ul id="password-requirements">
+                <li id="length">Al menos 8 caracteres</li>
+                <li id="uppercase">Al menos una letra mayúscula</li>
+                <li id="lowercase">Al menos una letra minúscula</li>
+                <li id="number">Al menos un número</li>
+                <li id="symbol">Al menos un símbolo (ejemplo: !, @, #, $, %, etc.)</li>
             </ul>
         </div>
 
-<style>
-  #password-requirements {
-    list-style: none;
-    padding: 0;
-  }
-  #password-requirements li {
-    color: red;
-  }
-  #password-requirements li.valid {
-    color: green;
-  }
-</style>
+
 
         <!--
         <div id="password-strength-message"></div><br>
@@ -48,29 +51,61 @@
         <button type="submit" id="submitButton">Registrarse</button>
     </form>
 
-    <script>
+<script>
+  const passwordInput = document.getElementById('password');
+  const form = document.getElementById('registerForm');
+
+  passwordInput.addEventListener('keyup', validatePassword);
+
   function validatePassword() {
-    const password = document.getElementById('password').value;
+    const password = passwordInput.value;
 
-    // Requisitos
-    const lengthRequirement = document.getElementById('length');
-    const uppercaseRequirement = document.getElementById('uppercase');
-    const numberRequirement = document.getElementById('number');
-
-    // Validaciones
-    password.length >= 8
-      ? lengthRequirement.classList.add('valid')
-      : lengthRequirement.classList.remove('valid');
-
-    /[A-Z]/.test(password)
-      ? uppercaseRequirement.classList.add('valid')
-      : uppercaseRequirement.classList.remove('valid');
-
-    /\d/.test(password)
-      ? numberRequirement.classList.add('valid')
-      : numberRequirement.classList.remove('valid');
+    toggleRequirement('length', password.length >= 8);
+    toggleRequirement('uppercase', /[A-Z]/.test(password));
+    toggleRequirement('lowercase', /[a-z]/.test(password));
+    toggleRequirement('number', /\d/.test(password));
+    toggleRequirement('symbol', /[!@#\$%\^\&*\)\(+=._-]/.test(password));
   }
-    </script>
+
+  function toggleRequirement(id, condition) {
+    const element = document.getElementById(id);
+    element.classList.toggle('valid', condition);
+  }
+
+  form.addEventListener('submit', function (e) {
+    const password = passwordInput.value;
+
+    const isValid =
+      password.length >= 8 &&
+      /[A-Z]/.test(password) &&
+      /[a-z]/.test(password) &&
+      /\d/.test(password) &&
+      /[!@#\$%\^\&*\)\(+=._-]/.test(password);
+
+    if (!isValid) {
+      e.preventDefault();
+
+      // SweetAlert2 modal
+      Swal.fire({
+        icon: 'error',
+        title: 'Contraseña inválida',
+        html: `
+          Asegúrate de que tu contraseña cumpla con los siguientes requisitos:
+          <ul style="text-align: left; margin-top: 10px;">
+            <li>🔴 Al menos 8 caracteres</li>
+            <li>🔴 Una letra mayúscula</li>
+            <li>🔴 Una letra minúscula</li>
+            <li>🔴 Un número</li>
+            <li>🔴 Un símbolo (como !, @, #, $, etc.)</li>
+          </ul>
+        `,
+        confirmButtonText: 'Entendido',
+      });
+    }
+  });
+</script>
+
+
 
 
 
