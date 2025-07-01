@@ -43,20 +43,21 @@
                     body: JSON.stringify({ username, password })
                 });
 
-                const data = await res.json();
+                const data = await res.json().catch(() => ({})); // ← evita errores si JSON no es válido
 
                 if (!res.ok) {
-                    showModal(data.error); // <-- función que muestra el modal con mensaje
+                    const message = data.error || "Error desconocido.";
+                    showModal(message);
                     return;
                 }
 
                 // Si todo bien, redirige
-                window.location.href = `/welcome.html?username=${encodeURIComponent(username)}`;
-
+                window.location.href = `/welcome.html?username=${encodeURIComponent(data.username)}`;
             } catch (err) {
                 showModal("Error de red: " + err.message);
             }
         });
+
 
         function showModal(message) {
             const modal = document.querySelector("#modal");
