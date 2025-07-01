@@ -11,7 +11,7 @@
 <body class="index-page">
     <h2>Inicio de Sesión</h2>
     <img src="images/mole1.png" alt="Imagen de inicio de sesión" class="login-image">
-    <form action="/login" method="POST">
+    <form id="loginForm" action="/login" method="POST">
         <label for="username">Nombre de Usuario</label>
         <input type="text" id="username" name="username" required><br>
 
@@ -24,49 +24,54 @@
         <button type="submit">Iniciar Sesión</button>
     </form>
 
+    <div id="modal" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%);
+  background:#fff; padding:20px; border:1px solid #ccc; box-shadow:0 0 10px #000;">
+        <p></p>
+        <button onclick="document.getElementById('modal').style.display='none'">Cerrar</button>
+    </div>
+
+    <script>
+        document.querySelector("#loginForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const username = document.querySelector("#username").value;
+            const password = document.querySelector("#password").value;
+
+            try {
+                const res = await fetch("/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    showModal(data.error); // <-- función que muestra el modal con mensaje
+                    return;
+                }
+
+                // Si todo bien, redirige
+                window.location.href = `/welcome.html?username=${encodeURIComponent(username)}`;
+
+            } catch (err) {
+                showModal("Error de red: " + err.message);
+            }
+        });
+
+        function showModal(message) {
+            const modal = document.querySelector("#modal");
+            modal.querySelector("p").innerText = message;
+            modal.style.display = "block";
+        }
+    </script>
+
+
 </body>
 
 
-<script>
-    document.querySelector("#loginForm").addEventListener("submit", async function (e) {
-        e.preventDefault();
-        const username = document.querySelector("#username").value;
-        const password = document.querySelector("#password").value;
 
-        try {
-            const res = await fetch("/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password })
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                showModal(data.error); // <-- función que muestra el modal con mensaje
-                return;
-            }
-
-            // Si todo bien, redirige
-            window.location.href = `/welcome.html?username=${encodeURIComponent(username)}`;
-
-        } catch (err) {
-            showModal("Error de red: " + err.message);
-        }
-    });
-
-    function showModal(message) {
-        const modal = document.querySelector("#modal");
-        modal.querySelector("p").innerText = message;
-        modal.style.display = "block";
-    }
-</script>
 
 <!-- Modal básico -->
-<div id="modal" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%);
-  background:#fff; padding:20px; border:1px solid #ccc; box-shadow:0 0 10px #000;">
-    <p></p>
-    <button onclick="document.getElementById('modal').style.display='none'">Cerrar</button>
-</div>
+
 
 </html>

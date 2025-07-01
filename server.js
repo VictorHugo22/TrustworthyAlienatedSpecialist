@@ -157,7 +157,7 @@ app.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ error: "Contraseña incorrecta." });
 
-    res.redirect(`/welcome.html?username=${encodeURIComponent(user.username)}`);
+    res.json({ username: user.username });
   } catch (err) {
     console.error("Error en login:", err);
     res.status(500).json({ error: "Error interno al iniciar sesión." });
