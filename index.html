@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body class="index-page">
@@ -23,12 +25,6 @@
 
         <button type="submit">Iniciar Sesión</button>
     </form>
-
-    <div id="modal" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%);
-  background:#fff; padding:20px; border:1px solid #ccc; box-shadow:0 0 10px #000;">
-        <p></p>
-        <button onclick="document.getElementById('modal').style.display='none'">Cerrar</button>
-    </div>
 
     <script>
         document.querySelector("#loginForm").addEventListener("submit", async function (e) {
@@ -60,10 +56,14 @@
 
 
         function showModal(message) {
-            const modal = document.querySelector("#modal");
-            modal.querySelector("p").innerText = message;
-            modal.style.display = "block";
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al iniciar sesión',
+                text: message,
+                confirmButtonText: 'Entendido',
+            });
         }
+
     </script>
 
 
