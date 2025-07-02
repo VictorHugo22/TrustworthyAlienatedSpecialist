@@ -1,49 +1,164 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bienvenido</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+  <script src="https://kit.fontawesome.com/a2e00a6a4b.js" crossorigin="anonymous"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Roboto', sans-serif;
+      background-color: #2c3e50;
+      color: #ecf0f1;
       text-align: center;
-      margin-top: 50px;
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      margin-bottom: 40px;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-section img {
+      height: 60px;
+      margin-right: 15px;
+    }
+
+    .slogan {
+      font-style: italic;
+      font-size: 16px;
+      color: #f1c40f;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      background-color: #3c556e;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      margin: 0 auto 30px;
+    }
+
+    .container p {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    a {
+      color: #9b59b6;
+      font-size: 18px;
+      text-decoration: none;
+      display: block;
+      margin: 8px 0;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    #logout-button {
+      background-color: #27ae60;
+      border: none;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 30px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    #logout-button:hover {
+      background-color: #1e8449;
+    }
+
+    #logout-button i {
+      margin-right: 8px;
+    }
+
+    #goodbye-message {
+      display: none;
+      font-size: 18px;
+      margin-top: 30px;
+      color: #f39c12;
+      animation: fadeOut 2s ease forwards;
+    }
+
+    @keyframes fadeOut {
+      0% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
     }
   </style>
 </head>
-<body>
-  <img src="images/logoC.png" alt="Logo de la página" class="logo">
-  <h1 id="welcome-message"></h1>
-  <div class="container">
-        
-        <p>Datos curiosos:</p>
 
-        <!-- Enlaces -->
-        
-        <p><a href="dato1.html">
-            Crptografía Clásica
-        </a></p>
-        <p><a href="dato2.html">
-            Criptografía Moderna
-        </a></p>
-        
-        <p><a href="dato3.html">
-            Tendencias Criptográficas
-        </a></p>
+<body>
+  <header>
+    <div class="logo-section">
+      <img src="images/logoC.png" alt="Logo de la página">
     </div>
+  </header>
+
+  <h1 id="welcome-message">¡Bienvenido!</h1>
+
+  <div class="container">
+    <p>Datos curiosos:</p>
+    <a href="dato1.html">Criptografía Clásica</a>
+    <a href="dato2.html">Criptografía Moderna</a>
+    <a href="dato3.html">Tendencias Criptográficas</a>
+  </div>
+
+  <button id="logout-button"><i class="fas fa-sign-out-alt"></i>Cerrar Sesión</button>
+
+  <p id="goodbye-message">¡Hasta pronto!</p>
+
   <script>
-    // Obtener el parámetro `username` de la URL
     const params = new URLSearchParams(window.location.search);
     const username = params.get('username');
+    const welcomeEl = document.getElementById('welcome-message');
+    const goodbyeEl = document.getElementById('goodbye-message');
 
-    // Mostrar un mensaje de bienvenida dinámico
     if (username) {
-      document.getElementById('welcome-message').innerText = `¡Bienvenido, ${username}!`;
+      welcomeEl.innerText = `¡Bienvenido, ${username}!`;
+      localStorage.setItem('username', username);
     } else {
-      document.getElementById('welcome-message').innerText = '¡Bienvenido!';
+      const storedUser = localStorage.getItem('username');
+      welcomeEl.innerText = storedUser ? `¡Bienvenido, ${storedUser}!` : '¡Bienvenido!';
     }
+
+    document.getElementById("logout-button").addEventListener("click", () => {
+      const confirmLogout = confirm("¿Deseas cerrar sesión?");
+      if (confirmLogout) {
+        localStorage.removeItem('username');
+        goodbyeEl.style.display = "block";
+        setTimeout(() => {
+          window.location.href = "../index.html"; // Ajusta la ruta si tu archivo está en carpeta
+        }, 2000);
+      }
+    });
   </script>
 </body>
+
 </html>
