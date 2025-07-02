@@ -6,13 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Curiosidades de la Criptografía</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 50px;
-    }
-  </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
@@ -24,73 +17,52 @@
   <div class="container" id="pdf-content">
     <div class="section">
       <h2>La Escítala espartana</h2>
-      <ul>
-        <li><strong>La Escítala Espartana:</strong> La escítala fue un antiguo dispositivo criptográfico
-          utilizado por los espartanos, una de las sociedades más militarizadas de la antigua Grecia.
-          Este artefacto es considerado uno de los primeros ejemplos registrados de criptografía, y
-          destaca por su simplicidad y efectividad en el contexto militar. Su funcionamiento se
-          basaba en un principio de transposición, es decir, no alteraba los caracteres del mensaje
-          sino su disposición.<br><br>
+      <p><strong>La Escítala Espartana</strong> fue un antiguo dispositivo criptográfico utilizado por los espartanos, una de las sociedades más militarizadas de la antigua Grecia. Este artefacto es considerado uno de los primeros ejemplos registrados de criptografía, y destaca por su simplicidad y efectividad en el contexto militar. Su funcionamiento se basaba en un principio de transposición, es decir, no alteraba los caracteres del mensaje sino su disposición.</p>
 
+      <p>El sistema consistía en una vara cilíndrica, sobre la cual se enrollaba una tira larga y estrecha de pergamino o cuero, formando una espiral alrededor del cilindro. El mensaje se escribía longitudinalmente sobre la tira mientras esta estaba enrollada. Una vez desenrollada, el texto aparecía desordenado y no tenía sentido alguno para quien intentara leerlo sin el soporte correcto. Para poder descifrarlo, era necesario enrollar la tira nuevamente sobre una vara del mismo grosor que la original. Solo así las letras se alineaban correctamente y revelaban el mensaje.</p>
 
-          El sistema consistía en una vara cilíndrica, sobre la cual se enrollaba una tira larga y
-          estrecha de pergamino o cuero, formando una espiral alrededor del cilindro. El mensaje
-          se escribía longitudinalmente sobre la tira mientras esta estaba enrollada. Una vez
-          desenrollada, el texto aparecía desordenado y no tenía sentido alguno para quien intentara
-          leerlo sin el soporte correcto. Para poder descifrarlo, era necesario enrollar la tira
-          nuevamente sobre una vara del mismo grosor que la original. Solo así las letras se alineaban
-          correctamente y revelaban el mensaje.<br><br>
+      <p>Este método ofrecía una forma rápida y eficaz de asegurar que solo el destinatario, que poseía una escítala del mismo tamaño, pudiera entender el contenido del mensaje. Fue utilizado principalmente por comandantes militares espartanos, quienes debían enviar órdenes seguras a través de largas distancias sin temor a que fueran comprendidas por enemigos si eran interceptadas.</p>
 
-          Este método ofrecía una forma rápida y eficaz de asegurar que solo el destinatario, que
-          poseía una escítala del mismo tamaño, pudiera entender el contenido del mensaje. Fue utilizado
-          principalmente por comandantes militares espartanos, quienes debían enviar órdenes seguras a
-          través de largas distancias sin temor a que fueran comprendidas por enemigos si eran
-          interceptadas.<br><br>
-
-
-          Aunque su nivel de seguridad es básico en comparación con los estándares criptográficos actuales, la escítala
-          representa un ejemplo temprano y tangible de cómo la criptografía ha sido una herramienta estratégica en los
-          conflictos desde tiempos remotos. Su sencillez también ilustra un principio clave de la criptografía: que la
-          seguridad puede derivarse tanto del método como del secreto compartido entre emisor y receptor.<br><br>
-
-        </li>
-
-      </ul>
+      <p>Aunque su nivel de seguridad es básico en comparación con los estándares criptográficos actuales, la escítala representa un ejemplo temprano y tangible de cómo la criptografía ha sido una herramienta estratégica en los conflictos desde tiempos remotos. Su sencillez también ilustra un principio clave de la criptografía: que la seguridad puede derivarse tanto del método como del secreto compartido entre emisor y receptor.</p>
     </div>
-    <button type="submit" id="submitButton">Descargar PDF</button>
+    <button id="submitButton">Descargar PDF</button>
   </div>
-
 
   <script>
     document.getElementById("submitButton").addEventListener("click", () => {
       const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF();
+      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
 
       const title = document.querySelector("h1").innerText;
       const sectionTitle = document.querySelector("h2").innerText;
-      const paragraph = document.querySelector(".section ul li").innerText;
+      const paragraphs = Array.from(document.querySelectorAll(".section p")).map(p => p.innerText);
 
       let y = 20;
       pdf.setFont("Times", "Bold");
       pdf.setFontSize(18);
       pdf.text(title, 105, y, { align: "center" });
 
-      y += 10;
-      pdf.setFont("Times", "Bold");
+      y += 15;
       pdf.setFontSize(14);
-      pdf.text(sectionTitle, 10, y);
+      pdf.text(sectionTitle, 105, y, { align: "center" });
 
-      y += 10;
+      y += 15;
       pdf.setFont("Times", "Normal");
       pdf.setFontSize(12);
 
-      const lines = pdf.splitTextToSize(paragraph, 180);
-      pdf.text(lines, 10, y);
+      paragraphs.forEach(p => {
+        const lines = pdf.splitTextToSize(p, 180);
+        if (y + lines.length * 7 > 280) {
+          pdf.addPage();
+          y = 20;
+        }
+        pdf.text(lines, 15, y);
+        y += lines.length * 7 + 5;
+      });
 
       pdf.save("curiosidades_criptografia.pdf");
     });
   </script>
-
 
 </body>
 

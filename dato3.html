@@ -1,43 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Curiosidades de la Criptografía</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 50px;
-    }
-  </style>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
+
 <body>
   <header>
     <h1>Curiosidades de la Criptografía</h1>
   </header>
 
-  <div class="container">
+  <div class="container" id="pdf-content">
     <div class="section">
-      <h2>Criptografía Postcuántica (PQC):</h2>
-      <ul>
-        <li><strong>La Criptografía Postcuántica (PQC) es una rama de la criptografía moderna que se ha vuelto crucial ante la inminente llegada de computadoras cuánticas lo suficientemente potentes como para romper muchos de los sistemas criptográficos que usamos hoy en día. A diferencia de la criptografía tradicional basada en problemas matemáticos como la factorización de números grandes (como en RSA) o el logaritmo discreto (como en Diffie-Hellman y ECC), la criptografía postcuántica se basa en problemas matemáticos que se consideran resistentes incluso a los algoritmos cuánticos más avanzados conocidos, como el de Shor y el de Grover.<br><br>
+      <h2>Criptografía Postcuántica (PQC)</h2>
 
+      <p><strong>La Criptografía Postcuántica (PQC)</strong> es una rama de la criptografía moderna que se ha vuelto crucial ante la inminente llegada de computadoras cuánticas lo suficientemente potentes como para romper muchos de los sistemas criptográficos que usamos hoy en día. A diferencia de la criptografía tradicional basada en problemas matemáticos como la factorización de números grandes (como en RSA) o el logaritmo discreto (como en Diffie-Hellman y ECC), la criptografía postcuántica se basa en problemas matemáticos que se consideran resistentes incluso a los algoritmos cuánticos más avanzados conocidos, como el de Shor y el de Grover.</p>
 
-        La amenaza principal proviene del algoritmo de Shor, que permitiría a una computadora cuántica factorizar números primos de forma exponencialmente más rápida que cualquier algoritmo clásico. Esto rompería la seguridad de RSA y de muchos protocolos que se basan en la dificultad de estos cálculos. También afectaría la criptografía de curva elíptica (ECC), ampliamente utilizada en protocolos como HTTPS, firmas digitales, billeteras de criptomonedas y VPNs.<br><br>
-        
-        Ante este panorama, desde 2016, el Instituto Nacional de Estándares y Tecnología de EE. UU. (NIST) inició un proceso global para evaluar y estandarizar algoritmos postcuánticos. Tras varias rondas, en julio de 2022 anunció cuatro algoritmos seleccionados para estandarización: Kyber para el intercambio de claves, y Dilithium, FALCON y SPHINCS+ para firmas digitales. Kyber, por ejemplo, se basa en redes de retículos (lattices), un tipo de estructura matemática que resiste ataques tanto clásicos como cuánticos. Estos algoritmos fueron seleccionados no solo por su seguridad, sino también por su rendimiento en dispositivos con recursos limitados.<br><br>
+      <p>La amenaza principal proviene del algoritmo de Shor, que permitiría a una computadora cuántica factorizar números primos de forma exponencialmente más rápida que cualquier algoritmo clásico. Esto rompería la seguridad de RSA y de muchos protocolos que se basan en la dificultad de estos cálculos. También afectaría la criptografía de curva elíptica (ECC), ampliamente utilizada en protocolos como HTTPS, firmas digitales, billeteras de criptomonedas y VPNs.</p>
 
-        
-        Hoy en día, las grandes empresas tecnológicas, como Google, IBM y Microsoft, ya están experimentando con algoritmos postcuánticos en sus plataformas. Google, por ejemplo, ha probado Kyber en versiones de su navegador Chrome, mientras que Cloudflare ha integrado soluciones híbridas que combinan criptografía tradicional con algoritmos postcuánticos para asegurar la transición gradual sin comprometer la seguridad a corto plazo.<br><br>
-        
-        </li>
-        
-      </ul>
+      <p>Ante este panorama, desde 2016, el Instituto Nacional de Estándares y Tecnología de EE. UU. (NIST) inició un proceso global para evaluar y estandarizar algoritmos postcuánticos. Tras varias rondas, en julio de 2022 anunció cuatro algoritmos seleccionados para estandarización: Kyber para el intercambio de claves, y Dilithium, FALCON y SPHINCS+ para firmas digitales. Kyber, por ejemplo, se basa en redes de retículos (lattices), un tipo de estructura matemática que resiste ataques tanto clásicos como cuánticos. Estos algoritmos fueron seleccionados no solo por su seguridad, sino también por su rendimiento en dispositivos con recursos limitados.</p>
+
+      <p>Hoy en día, las grandes empresas tecnológicas, como Google, IBM y Microsoft, ya están experimentando con algoritmos postcuánticos en sus plataformas. Google, por ejemplo, ha probado Kyber en versiones de su navegador Chrome, mientras que Cloudflare ha integrado soluciones híbridas que combinan criptografía tradicional con algoritmos postcuánticos para asegurar la transición gradual sin comprometer la seguridad a corto plazo.</p>
     </div>
-    <button type="submit" id="submitButton">Descargar PDF</button>       
+
+    <button id="submitButton">Descargar PDF</button>
   </div>
 
+  <script>
+    document.getElementById("submitButton").addEventListener("click", () => {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+
+      const title = document.querySelector("h1").innerText;
+      const sectionTitle = document.querySelector("h2").innerText;
+      const paragraphs = Array.from(document.querySelectorAll(".section p")).map(p => p.innerText);
+
+      let y = 20;
+      pdf.setFont("Times", "Bold");
+      pdf.setFontSize(18);
+      pdf.text(title, 105, y, { align: "center" });
+
+      y += 15;
+      pdf.setFontSize(14);
+      pdf.text(sectionTitle, 105, y, { align: "center" });
+
+      y += 15;
+      pdf.setFont("Times", "Normal");
+      pdf.setFontSize(12);
+
+      paragraphs.forEach(p => {
+        const lines = pdf.splitTextToSize(p, 180);
+        if (y + lines.length * 7 > 280) {
+          pdf.addPage();
+          y = 20;
+        }
+        pdf.text(lines, 15, y);
+        y += lines.length * 7 + 5;
+      });
+
+      pdf.save("criptografia_postcuantica.pdf");
+    });
+  </script>
+
 </body>
+
 </html>
