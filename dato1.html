@@ -14,7 +14,6 @@
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 
 <body>
@@ -63,22 +62,31 @@
 
 
   <script>
-    document.getElementById("submitButton").addEventListener("click", async () => {
+    document.getElementById("submitButton").addEventListener("click", () => {
       const { jsPDF } = window.jspdf;
-      const content = document.getElementById("pdf-content");
+      const pdf = new jsPDF();
 
-      const canvas = await html2canvas(content, {
-        scale: 2,
-        useCORS: true
-      });
+      const title = document.querySelector("h1").innerText;
+      const sectionTitle = document.querySelector("h2").innerText;
+      const paragraph = document.querySelector(".section ul li").innerText;
 
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
+      let y = 20;
+      pdf.setFont("Times", "Bold");
+      pdf.setFontSize(18);
+      pdf.text(title, 105, y, { align: "center" });
 
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      y += 10;
+      pdf.setFont("Times", "Bold");
+      pdf.setFontSize(14);
+      pdf.text(sectionTitle, 10, y);
 
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      y += 10;
+      pdf.setFont("Times", "Normal");
+      pdf.setFontSize(12);
+
+      const lines = pdf.splitTextToSize(paragraph, 180);
+      pdf.text(lines, 10, y);
+
       pdf.save("curiosidades_criptografia.pdf");
     });
   </script>
